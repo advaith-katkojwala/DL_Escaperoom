@@ -1,0 +1,144 @@
+{
+  "title": "The Locked Library",
+  "intro": "You wake up on the cold floor of a locked library. Dust hangs in the lamplight. You can make out a **desk**, a **bookshelf**, a **painting**, a **locked drawer** and a heavy **door** with a four-digit keypad. Find a way out.",
+
+  "objects": {
+    "desk": {
+      "name": "desk",
+      "aliases": ["writing desk", "table"],
+      "examine": [
+        {"text": "A cluttered oak desk heaped with papers.", "sets": ["desk_seen"]}
+      ]
+    },
+    "bookshelf": {
+      "name": "bookshelf",
+      "aliases": ["bookcase", "shelf", "shelves"],
+      "examine": [
+        {"text": "Floor-to-ceiling shelves of dusty volumes. Four books stand out of line with the rest: one red, one blue, one green and one black. Something is scratched on their spines, but you would need to look at the books themselves.", "sets": ["books_seen"]}
+      ]
+    },
+    "books": {
+      "name": "four misplaced books",
+      "visible_flag": "books_seen",
+      "aliases": ["book", "four books", "misplaced books", "red book", "blue book", "green book", "black book", "spines"],
+      "examine": [
+        {"items": ["magnifying_glass"], "text": "Through the magnifying glass you can read tiny handwritten numbers on the spines: the red book bears a 5, the blue book a 2, the green book a 9. The black book has only a smudge.", "sets": ["digits_known"]},
+        {"text": "Tiny numbers are scratched on the spines, far too small to read with the naked eye. Something that magnifies might help."}
+      ]
+    },
+    "painting": {
+      "name": "painting",
+      "aliases": ["portrait", "picture", "frame", "plaque"],
+      "examine": [
+        {"flags": ["painting_open"], "text": "The portrait's frame has swung open on a hidden hinge, revealing a hollow in the wall. The plaque still reads: 'Founder of the library, 1863'."},
+        {"text": "A stern portrait of a bearded man. A brass plaque reads: 'Founder of the library, 1863'. The frame has a tiny keyhole in its side.", "sets": ["plaque_seen"]}
+      ]
+    },
+    "drawer": {
+      "name": "locked drawer",
+      "aliases": ["locked drawer", "desk drawer", "dial"],
+      "examine": [
+        {"flags": ["drawer_open"], "text": "The drawer stands open."},
+        {"text": "A small drawer in the desk, locked with a three-digit dial. You could try entering a code.", "sets": ["drawer_seen"]}
+      ]
+    },
+    "door": {
+      "name": "door",
+      "aliases": ["exit", "keypad", "code panel", "oak door"],
+      "examine": [
+        {"flags": ["door_powered"], "text": "The keypad glows faintly green, waiting for a four-digit code."},
+        {"text": "A heavy door with a four-digit keypad. The keypad is dark and unresponsive - it seems to have no power. Beneath it there is a small empty fuse slot.", "sets": ["door_seen"]}
+      ]
+    }
+  },
+
+  "items": {
+    "magnifying_glass": {
+      "name": "magnifying glass",
+      "aliases": ["magnifier", "glass", "lens"],
+      "location": "desk", "visible_flag": "desk_seen",
+      "take_text": "You pocket the magnifying glass.",
+      "examine": "A brass-rimmed magnifying glass. Good for reading tiny print."
+    },
+    "old_note": {
+      "name": "old note",
+      "aliases": ["note", "handwritten note", "paper", "scrap of paper"],
+      "location": "desk", "visible_flag": "desk_seen",
+      "take_text": "You take the handwritten note.",
+      "examine": "Scrawled in a hurry: 'Red, blue, green - in that order. Ignore the black one.'",
+      "sets": ["note_read"]
+    },
+    "brass_key": {
+      "name": "brass key",
+      "aliases": ["key"],
+      "location": "drawer", "visible_flag": "drawer_open",
+      "take_text": "You take the small brass key.",
+      "examine": "A small brass key with a delicate, narrow bit."
+    },
+    "fuse": {
+      "name": "fuse",
+      "aliases": ["glass fuse", "small fuse", "cartridge fuse"],
+      "location": "painting", "visible_flag": "painting_open",
+      "take_text": "You take the glass fuse from the hollow.",
+      "examine": "A glass cartridge fuse, the kind used in old electrical panels."
+    }
+  },
+
+  "use_rules": [
+    {
+      "item": "brass_key", "target": "painting",
+      "text": "The key turns with a click and the portrait swings open like a door, revealing a hollow in the wall. Inside you see a small glass fuse and a slip of paper that reads: 'The founder's year opens the way out.'",
+      "sets": ["painting_open"],
+      "already_text": "The portrait is already open."
+    },
+    {
+      "item": "fuse", "target": "door",
+      "text": "You press the fuse into the slot beneath the keypad. The keypad flickers to life with a soft green glow.",
+      "sets": ["door_powered"], "consume": true,
+      "already_text": "The keypad is already powered."
+    },
+    {
+      "item": "magnifying_glass", "target": "books",
+      "delegate": "examine"
+    },
+    {
+      "item": "brass_key", "target": "drawer",
+      "fail_text": "The drawer has a dial, not a keyhole. The key does not fit."
+    }
+  ],
+
+  "codes": {
+    "drawer": {
+      "solution": "529",
+      "requires_flags": [],
+      "locked_text": "",
+      "wrong_text": "The dial clicks into place but the drawer stays shut. That is not the right code.",
+      "success_text": "The dial clicks and the drawer slides open. Inside lies a small brass key.",
+      "sets": ["drawer_open"],
+      "already_text": "The drawer is already open."
+    },
+    "door": {
+      "solution": "1863",
+      "requires_flags": ["door_powered"],
+      "locked_text": "The keypad is dark. Pressing the keys does nothing at all.",
+      "wrong_text": "The keypad buzzes angrily and flashes red. Wrong code.",
+      "success_text": "The keypad beeps, the bolt thunders back and the heavy door swings open onto fresh night air. You have escaped the Locked Library!",
+      "sets": ["door_open"],
+      "escapes": true,
+      "already_text": "The door is already open."
+    }
+  },
+
+  "hints": [
+    {"until": ["desk_seen"], "text": "Start with the desk - people hide things under papers."},
+    {"until": ["took_magnifying_glass", "took_old_note"], "text": "There are useful objects on the desk. Take them."},
+    {"until": ["books_seen"], "text": "Something about the bookshelf looks out of order."},
+    {"until": ["digits_known"], "text": "The odd books carry writing too small to read. Something might magnify it."},
+    {"until": ["drawer_open"], "text": "The numbers on the books, read in the order the note gives, fit the drawer's three-digit dial."},
+    {"until": ["took_brass_key"], "text": "Take what is inside the drawer."},
+    {"until": ["painting_open"], "text": "The portrait's frame has a keyhole."},
+    {"until": ["took_fuse"], "text": "Something is hidden behind the portrait."},
+    {"until": ["door_powered"], "text": "The door's keypad has no power. Look for a slot, and something that fits it."},
+    {"until": ["door_open"], "text": "A year is written somewhere in this room. Which one opens the way out?"}
+  ]
+}
