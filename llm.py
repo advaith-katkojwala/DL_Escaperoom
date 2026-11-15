@@ -9,7 +9,7 @@ Setup:
     cp .env.example .env  and put your free key from https://aistudio.google.com/apikey in it
     (or: export GEMINI_API_KEY="...")
 Optional:
-    export GEMINI_MODEL="gemini-2.5-flash"   # change if Google renames/retires it
+    export GEMINI_MODEL="gemini-3.8-flash"   # change if Google renames/retires it
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ try:  # optional: load a local .env file (never commit it)
 except ImportError:
     pass
 
-DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 
 
 class LLMError(RuntimeError):
