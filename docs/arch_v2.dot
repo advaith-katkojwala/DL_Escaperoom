@@ -1,0 +1,39 @@
+digraph V2 {
+  rankdir=LR; fontname="Helvetica"; nodesep=0.45; ranksep=0.6;
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, margin="0.18,0.1"];
+  edge [fontname="Helvetica", fontsize=9];
+  labelloc=t; label="Version 2 - Python owns the rules, the LLM only parses and narrates"; fontsize=14;
+
+  player [label="Player\n(browser)", fillcolor="#E8F0FE"];
+  ui     [label="Streamlit UI\napp_v2.py\nchat, inventory, progress,\nrestart", fillcolor="#E6F4EA"];
+
+  subgraph cluster_py {
+    label="Trusted: deterministic Python"; style="rounded,dashed"; color="#188038"; fontsize=11;
+    screen [label="1. Security screen\n(intent.py)\norders / authority claims /\nsecret requests -> refuse", fillcolor="#E6F4EA"];
+    valid  [label="2. Validate parsed action\nwhitelists; code digits must\nappear in player message", fillcolor="#E6F4EA"];
+    engine [label="3. Game engine (engine.py)\naction validation, inventory,\npreconditions, puzzle rules", fillcolor="#CEEAD6"];
+    state  [label="Game state\n(dict / JSON):\nflags, inventory, attempts,\ndoor status", shape=cylinder, fillcolor="#FEF7E0"];
+    cfg    [label="game_config.json\nobjects, items, rules,\nSOLUTIONS", shape=cylinder, fillcolor="#FEF7E0"];
+    guard  [label="5. Output guard\n(v2_core.py)\nblock invented / leaked numbers", fillcolor="#E6F4EA"];
+  }
+
+  subgraph cluster_llm {
+    label="Untrusted: LLM (Gemini)"; style="rounded,dashed"; color="#C5221F"; fontsize=11;
+    parse [label="Intent parser\nJSON action,\ntemperature 0", fillcolor="#FCE8E6"];
+    narr  [label="4. Narrator\nsees FACTS only,\nnever the solutions", fillcolor="#FCE8E6"];
+  }
+
+  player -> ui [label="message"];
+  ui -> screen;
+  screen -> parse [label="not flagged"];
+  parse -> valid  [label="proposed JSON"];
+  parse -> valid  [style=invis];
+  valid -> engine [label="structured action"];
+  engine -> state [dir=both, label="read / write"];
+  cfg -> engine   [label="rules + solutions"];
+  engine -> narr  [label="Result: outcome +\nfacts"];
+  narr -> guard   [label="prose"];
+  guard -> ui     [label="safe reply\n(or plain facts)"];
+  ui -> player;
+  screen -> engine [label="flagged:\nrefused action", style=dashed];
+}
