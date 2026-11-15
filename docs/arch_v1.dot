@@ -1,0 +1,20 @@
+digraph V1 {
+  rankdir=LR; fontname="Helvetica"; nodesep=0.5; ranksep=0.7;
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, margin="0.18,0.1"];
+  edge [fontname="Helvetica", fontsize=9];
+  labelloc=t; label="Version 1 - LLM-only Game Master"; fontsize=14;
+
+  player [label="Player\n(browser)", fillcolor="#E8F0FE"];
+  ui     [label="Streamlit UI\napp_v1.py\nchat + restart", fillcolor="#E6F4EA"];
+  core   [label="V1Game (v1_core.py)\nchat history list\nwin-marker check", fillcolor="#FEF7E0"];
+  llm    [label="Gemini API\n(llm.py)", fillcolor="#FCE8E6"];
+  prompt [label="System prompt\nroom + ALL secrets + rules\n(the only 'game state' is\nthe conversation text)", shape=note, fillcolor="#FFF8E1"];
+
+  player -> ui   [label="natural-language\nmessage"];
+  ui -> core     [label="message"];
+  core -> llm    [label="system prompt +\nfull history + message"];
+  prompt -> core [style=dashed, arrowhead=none];
+  llm -> core    [label="narration\n(may end with [ESCAPED])"];
+  core -> ui     [label="reply / escaped?"];
+  ui -> player   [label="reply"];
+}
