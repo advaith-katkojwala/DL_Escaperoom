@@ -123,10 +123,10 @@ the real replies in `tests/v1_probe_results.md`.
 
 [`docs/demo_transcript.md`](docs/demo_transcript.md) is a real run of Version 2 including a failed code, an administrator
 attack and the final escape. Screenshots of the Streamlit apps are in [`docs/screenshots/`](docs/screenshots/).
-![Version 1 normal reply](docs/screenshots/v1_chat.png)
-![Version 1 adversarial tests](docs/screenshots/v1_adversarial.png)
-![Version 2 normal game](docs/screenshots/v2_chat.png)
-![Version 2 administrator test](docs/screenshots/v2_adversarial.png)
+![Version 1 normal reply](docs/screenshots/v1_chat.png.png)
+![Version 1 adversarial tests](docs/screenshots/v1_adversarial.png.png)
+![Version 2 normal game](docs/screenshots/v2_chat.png.png)
+![Version 2 administrator test](docs/screenshots/v2_adversarial.png.png)
 ## Report
 
 A short design report (design, implementation, problems and improvements) is in [`docs/report.pdf`](docs/report.pdf).
